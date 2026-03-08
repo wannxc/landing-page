@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Keuangan - Dashboard Finansial</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-chart-line"></i> Laporan Keuangan</h1>
+                <p class="subtitle">Dashboard Analisis Finansial Periode 2026</p>
+            </div>
+            <nav class="navbar">
+                <button class="nav-btn active" data-tab="overview">Ringkasan</button>
+                <button class="nav-btn" data-tab="expenses">Pengeluaran</button>
+                <button class="nav-btn" data-tab="income">Pendapatan</button>
+                <button class="nav-btn" data-tab="analytics">Analitik</button>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Tab: Overview -->
+            <div id="overview" class="tab-content active">
+                <section class="summary-section">
+                    <h2>Ringkasan Keuangan</h2>
+                    <div class="summary-cards">
+                        <div class="card total-income">
+                            <div class="card-icon">
+                                <i class="fas fa-arrow-up"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Total Pendapatan</h3>
+                                <p class="amount">Rp 150.000.000</p>
+                                <span class="change positive">+12% dari bulan lalu</span>
+                            </div>
+                        </div>
+
+                        <div class="card total-expenses">
+                            <div class="card-icon">
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Total Pengeluaran</h3>
+                                <p class="amount">Rp 85.000.000</p>
+                                <span class="change negative">+5% dari bulan lalu</span>
+                            </div>
+                        </div>
+
+                        <div class="card balance">
+                            <div class="card-icon">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Saldo Bersih</h3>
+                                <p class="amount">Rp 65.000.000</p>
+                                <span class="change positive">+18% dari bulan lalu</span>
+                            </div>
+                        </div>
+
+                        <div class="card savings-rate">
+                            <div class="card-icon">
+                                <i class="fas fa-piggy-bank"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Tingkat Tabungan</h3>
+                                <p class="amount">43.3%</p>
+                                <span class="change positive">Target: 40%</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Monthly Trend Chart -->
+                <section class="chart-section">
+                    <h2>Tren Keuangan Bulanan</h2>
+                    <div class="chart-container">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </section>
+
+                <!-- Quick Actions -->
+                <section class="actions-section">
+                    <h2>Aksi Cepat</h2>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="addTransaction()">
+                            <i class="fas fa-plus"></i> Tambah Transaksi
+                        </button>
+                        <button class="action-btn" onclick="exportReport()">
+                            <i class="fas fa-download"></i> Export Laporan
+                        </button>
+                        <button class="action-btn" onclick="setReminder()">
+                            <i class="fas fa-bell"></i> Atur Pengingat
+                        </button>
+                        <button class="action-btn" onclick="generateBudget()">
+                            <i class="fas fa-calculator"></i> Buat Anggaran
+                        </button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Tab: Expenses -->
+            <div id="expenses" class="tab-content">
+                <section class="expenses-section">
+                    <h2>Rincian Pengeluaran</h2>
+                    <div class="filter-section">
+                        <input type="month" id="monthFilter" onchange="filterExpenses()">
+                        <select id="categoryFilter" onchange="filterExpenses()">
+                            <option value="">Semua Kategori</option>
+                            <option value="Operasional">Operasional</option>
+                            <option value="Gaji">Gaji Karyawan</option>
+                            <option value="Marketing">Marketing</option>
+                            <option value="Utilitas">Utilitas</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+
+                    <div class="expenses-container">
+                        <div class="expense-chart">
+                            <canvas id="expenseChart"></canvas>
+                        </div>
+
+                        <div class="expense-list">
+                            <h3>Daftar Pengeluaran</h3>
+                            <table class="expense-table">
+                                <thead>
+                                    <tr>
+                                        <th>Tanggal</th>
+                                        <th>Kategori</th>
+                                        <th>Deskripsi</th>
+                                        <th>Jumlah</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="expenseTableBody">
+                                    <tr>
+                                        <td>2026-03-05</td>
+                                        <td><span class="badge operational">Operasional</span></td>
+                                        <td>Perawatan Kendaraan</td>
+                                        <td>Rp 2.500.000</td>
+                                        <td><button class="btn-small edit" onclick="editExpense(1)">Edit</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2026-03-03</td>
+                                        <td><span class="badge salary">Gaji Karyawan</span></td>
+                                        <td>Gaji Maret 2026</td>
+                                        <td>Rp 45.000.000</td>
+                                        <td><button class="btn-small edit" onclick="editExpense(2)">Edit</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2026-03-01</td>
+                                        <td><span class="badge marketing">Marketing</span></td>
+                                        <td>Iklan Media Sosial</td>
+                                        <td>Rp 15.000.000</td>
+                                        <td><button class="btn-small edit" onclick="editExpense(3)">Edit</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2026-02-28</td>
+                                        <td><span class="badge utilities">Utilitas</span></td>
+                                        <td>Listrik & Air</td>
+                                        <td>Rp 5.800.000</td>
+                                        <td><button class="btn-small edit" onclick="editExpense(4)">Edit</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2026-02-25</td>
+                                        <td><span class="badge other">Lainnya</span></td>
+                                        <td>Biaya Asuransi</td>
+                                        <td>Rp 8.700.000</td>
+                                        <td><button class="btn-small edit" onclick="editExpense(5)">Edit</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Tab: Income -->
+            <div id="income" class="tab-content">
+                <section class="income-section">
+                    <h2>Rincian Pendapatan</h2>
+                    <div class="filter-section">
+                        <input type="month" id="incomeMonthFilter" onchange="filterIncome()">
+                        <select id="sourceFilter" onchange="filterIncome()">
+                            <option value="">Semua Sumber</option>
+                            <option value="Penjualan">Penjualan</option>
+                            <option value="Layanan">Layanan</option>
+                            <option value="Investasi">Investasi</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
+                    </div>
+
+                    <div class="income-container">
+                        <div class="income-chart">
+                            <canvas id="incomeChart"></canvas>
+                        </div>
+
+                        <div class="income-list">
+                            <h3>Daftar Pendapatan</h3>
+                            <table class="income-table">
+                                <thead>
+                                    <tr>
+                                        <th>Tanggal</th>
+                                        <th>Sumber</th>
+                                        <th>Deskripsi</th>
+                                        <th>Jumlah</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="incomeTableBody">
+                                    <tr>
+                                        <td>2026-03-05</td>
+                                        <td><span class="badge sales">Penjualan</span></td>
+                                        <td>Penjualan Produk A</td>
+                                        <td>Rp 75.000.000</td>
+                                        <td><button class="btn-small edit" onclick="editIncome(1)">Edit</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2026-03-01</td>
+                                        <td><span class="badge service">Layanan</span></td>
+                                        <td>Konsultasi Bisnis</td>
+                                        <td>Rp 50.000.000</td>
+                                        <td><button class="btn-small edit" onclick="editIncome(2)">Edit</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2026-02-20</td>
+                                        <td><span class="badge investment">Investasi</span></td>
+                                        <td>Dividen Saham</td>
+                                        <td>Rp 25.000.000</td>
+                                        <td><button class="btn-small edit" onclick="editIncome(3)">Edit</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Tab: Analytics -->
+            <div id="analytics" class="tab-content">
+                <section class="analytics-section">
+                    <h2>Analitik Lanjutan</h2>
+                    
+                    <div class="analytics-grid">
+                        <div class="analytics-card">
+                            <h3>Persentase Pengeluaran per Kategori</h3>
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+
+                        <div class="analytics-card">
+                            <h3>Proyeksi Keuangan 6 Bulan</h3>
+                            <canvas id="projectionChart"></canvas>
+                        </div>
+
+                        <div class="analytics-card">
+                            <h3>Metrik Kinerja Keuangan</h3>
+                            <div class="metrics">
+                                <div class="metric">
+                                    <span class="metric-label">ROI (Return on Investment)</span>
+                                    <span class="metric-value">23.5%</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Debt to Income Ratio</span>
+                                    <span class="metric-value">0.15</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Average Transaction</span>
+                                    <span class="metric-value">Rp 2.125.000</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Cash Flow Health</span>
+                                    <span class="metric-value positive">Sangat Baik</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <h3>Rekomendasi</h3>
+                            <ul class="recommendations">
+                                <li><i class="fas fa-check-circle"></i> Pertahankan tingkat tabungan saat ini</li>
+                                <li><i class="fas fa-warning"></i> Tinjau pengeluaran marketing bulan depan</li>
+                                <li><i class="fas fa-lightbulb"></i> Alokasikan 10% pendapatan untuk investasi</li>
+                                <li><i class="fas fa-target"></i> Targetkan pertumbuhan pendapatan 15% Q2</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2026 Laporan Keuangan. Semua hak dilindungi. | Diperbarui: <span id="updateTime"></span></p>
+        </footer>
+    </div>
+
+    <!-- Modal untuk Tambah Transaksi -->
+    <div id="transactionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Tambah Transaksi Baru</h2>
+            <form onsubmit="saveTransaction(event)">
+                <div class="form-group">
+                    <label for="transType">Tipe Transaksi:</label>
+                    <select id="transType" required>
+                        <option value="income">Pendapatan</option>
+                        <option value="expense">Pengeluaran</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="transAmount">Jumlah:</label>
+                    <input type="number" id="transAmount" placeholder="Rp" required>
+                </div>
+                <div class="form-group">
+                    <label for="transCategory">Kategori:</label>
+                    <input type="text" id="transCategory" placeholder="Masukkan kategori" required>
+                </div>
+                <div class="form-group">
+                    <label for="transDescription">Deskripsi:</label>
+                    <textarea id="transDescription" placeholder="Detail transaksi" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="transDate">Tanggal:</label>
+                    <input type="date" id="transDate" required>
+                </div>
+                <button type="submit" class="btn-primary">Simpan Transaksi</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
